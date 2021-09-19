@@ -1,18 +1,37 @@
 import os
 import json
+from prettytable import PrettyTable
+
+def get_prices_from_json(dirname):
+    prices_list = []
+
+    for date_dirname in os.listdir(f"./data/{dirname}"):
+        f = open(f"./data/{dirname}/{date_dirname}/result_list.json")
+        data = json.load(f)
+
+        prices_list.append(data[0]["prices"][:5])
+
+    return prices_list
 
 def main():
+    table = PrettyTable()
+    is_date_added_to_field_names = False
+    field_names = ["NFT name"]
     for dirname in os.listdir('./data'):
         # if dirname == "Claire" or dirname == "Stormy Easter ‘21" or dirname == "Syrup Soak":
-            print('- - - - - - - - - - - - - - - - - - - - - - - - - - - -')
-            print(dirname)
-            for date_dirname in os.listdir(f"./data/{dirname}"):
-                f = open(f"./data/{dirname}/{date_dirname}/result_list.json")
-                data = json.load(f)
+        if not is_date_added_to_field_names:
+            field_names.extend(os.listdir(f"./data/{dirname}"))
+            table.field_names = field_names
+            is_date_added_to_field_names = True
 
-                first_five_prices = data[0]["prices"][:5]
+        prices_list = get_prices_from_json(dirname)
+        row = [dirname]
+        for price in prices_list:
+            row.append(price)
 
-                print(date_dirname, ' | ', first_five_prices)
+        table.add_row(row)
+        
+    print(table)
                 
         
 
