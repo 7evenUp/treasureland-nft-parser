@@ -1,0 +1,11 @@
+[
+    {
+        "nft_name": "Baller",
+        "prices": [
+            299.0,
+            888.0,
+            1000.0
+        ],
+        "total_nfts": 3
+    }
+]
