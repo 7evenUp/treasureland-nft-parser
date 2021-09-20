@@ -1,6 +1,7 @@
 import os
 import json
 from prettytable import PrettyTable
+import prettytable
 
 def get_prices_from_json(dirname):
     prices_list = []
@@ -9,12 +10,13 @@ def get_prices_from_json(dirname):
         f = open(f"./data/{dirname}/{date_dirname}/result_list.json")
         data = json.load(f)
 
-        prices_list.append(data[0]["prices"][:5])
+        prices_list.append(data[0]["prices"][:1])
 
     return prices_list
 
 def main():
     table = PrettyTable()
+    table.hrules = prettytable.ALL
     is_date_added_to_field_names = False
     field_names = ["NFT name"]
     for dirname in os.listdir('./data'):
