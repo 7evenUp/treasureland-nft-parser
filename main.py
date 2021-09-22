@@ -2,6 +2,7 @@ import requests
 import time
 import os
 import json
+import shutil
 
 headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36",
@@ -11,7 +12,7 @@ headers = {
 nft_names = {
     "Baller", "Lucky", "Lottie", "Claire", "Syrup Soak",
     "Easter '21 Champions", "Cakeston Easter ‘21", "Flipsie Easter ‘21", "Stormy Easter ‘21", 
-    "Bullish", "Hiccup", "Sleepy", "Sunny", "Churro", "Dollop", "Twinkle", "Swapsies", "Drizzle",
+    "Bullish", "Hiccup", "Swapsies", "Drizzle",
     "Blueberries", "Circular", "Sparkle"
 }
 
@@ -70,6 +71,10 @@ def load_data_into_folders(headers):
         result_list = load_data(headers, nft_name)
         if not os.path.exists(f"data/{nft_name}"):
             os.mkdir(f"data/{nft_name}")
+
+        if os.path.exists(f"data/{nft_name}/{date}"):
+            shutil.rmtree(f"data/{nft_name}/{date}")
+            print("[#] Folder was deleted")
 
         os.mkdir(f"data/{nft_name}/{date}")
 
