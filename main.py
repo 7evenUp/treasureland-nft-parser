@@ -22,7 +22,7 @@ def load_data(headers, nft_name):
     result_list = []
 
     while not is_ended:
-        url = f"https://api.treasureland.market/v2/v1/nft/items?chain_id=0&page_no={page_no}&page_size=40&contract=0xdf7952b35f24acf7fc0487d01c8d5690a60dba07&sort_type=1&"
+        url = f"https://api.treasureland.market/v2/v1/nft/items?chain_id=0&page_no={page_no}&page_size=100&contract=0xdf7952b35f24acf7fc0487d01c8d5690a60dba07&sort_type=1&"
 
         response = requests.get(url=url, headers=headers)
         print(f"[#] LOADIND {nft_name} FROM PAGE № {page_no}")
