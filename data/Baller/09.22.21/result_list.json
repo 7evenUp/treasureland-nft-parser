@@ -1,7 +1,7 @@
 [
     {
         "nft_name": "Baller",
-        "prices": [],
+        "prices": [0],
         "total_nfts": 0
     }
 ]
