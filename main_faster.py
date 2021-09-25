@@ -1,8 +1,6 @@
 import requests
 import time
 import os
-import asyncio
-# import aiohttp
 import json
 import shutil
 
@@ -13,21 +11,20 @@ nft_names = {
     "Blueberries", "Circular", "Sparkle"
 }
 
-def load_data(nft_name):
+def load_data():
     headers = {
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36",
         "accept": "application/json, text/plain, */*"
     }
     page_no = 1
     is_ended = False
-    price_list = []
-    result_list = []
+    result_dict = {}
 
     while not is_ended:
-        url = f"https://api.treasureland.market/v2/v1/nft/items?chain_id=0&page_no={page_no}&page_size=1000&contract=0xdf7952b35f24acf7fc0487d01c8d5690a60dba07&sort_type=1&"
+        url = f"https://api.treasureland.market/v2/v1/nft/items?chain_id=0&page_no={page_no}&page_size=50&contract=0xdf7952b35f24acf7fc0487d01c8d5690a60dba07&sort_type=1&"
 
         response = requests.get(url=url, headers=headers)
-        print(f"[#] LOADIND {nft_name} FROM PAGE № {page_no}")
+        print(f"[#] LOADIND FROM PAGE № {page_no}")
         try:
             data = response.json()["data"]
             list = data["list"]
@@ -37,39 +34,37 @@ def load_data(nft_name):
                 break
 
             for item in list:
-                item_name = item["name"]
-                item_price = int(item["price"]) / 10**18
+                if item["name"] in nft_names:
+                    item_price = int(item["price"]) / 10**18
 
-                if item_name == nft_name:
-                    print(item_name, item_price)
-                    price_list.append(item_price)
+                    if result_dict.get(item["name"]):
+                        prices_list = result_dict[str(item["name"])]
+                        prices_list.append(item_price)
+                    else:
+                        result_dict[item["name"]] = [item_price]
+                    
+                    
+                    # print(item["name"], item_price)
 
             page_no = page_no + 1
 
         except Exception as _ex:
             print(_ex)
         
-        
-    
-    print(f"[#] NFT CALLED {nft_name} IS DOWNLOADED")
-    price_list.sort()
-    print(price_list)
+    print(f"[#] NFTs ARE DOWNLOADED")
 
-    result_list.append(
-        {
-            "nft_name": nft_name,
-            "prices": price_list,
-            "total_nfts": len(price_list)
-        }
-    )
+    return result_dict
 
-    return result_list
-
-def load_data_into_folders():
+def load_data_into_folders(nfts_list):
     date = time.strftime("%x", time.localtime(time.time())).replace("/", ".")
 
-    for nft_name in nft_names:
-        result_list = load_data(nft_name)
+    for nft_name in nfts_list:
+        result_list = [{
+            "nft_name": nft_name,
+            "prices": nfts_list[nft_name],
+            "total_nfts": len(nfts_list[nft_name])
+        }]
+
         if not os.path.exists(f"data/{nft_name}"):
             os.mkdir(f"data/{nft_name}")
 
@@ -88,7 +83,12 @@ def load_data_into_folders():
 def main():
     start_time = time.time()
 
-    load_data_into_folders()
+    result = load_data()
+
+    for key in result.keys():
+        result[key].sort()
+
+    load_data_into_folders(result)
 
     finished_time = time.time() - start_time
 
