@@ -7,19 +7,19 @@ headers = {
     "accept": "application/json, text/plain, */*"
 }
 
-nft_names = { "Lucky", "Lottie", "Cakeston Easter ‘21", "Flipsie Easter ‘21" }
+nft_names = { "Flipsie Easter ‘21" }
 
-def load_data(headers, nft_name):
+def load_data():
     page_no = 1
     is_ended = False
-    price_list = []
-    result_list = []
+    result_dict = {}
 
     while not is_ended:
         url = f"https://api.treasureland.market/v2/v1/nft/items?chain_id=0&page_no={page_no}&page_size=100&contract=0xdf7952b35f24acf7fc0487d01c8d5690a60dba07&sort_type=1&"
 
         response = requests.get(url=url, headers=headers)
-        # print(f"[#] LOADIND {nft_name} FROM PAGE № {page_no}")
+        if page_no % 5 == 0:
+            print(f"[#] LOADIND FROM PAGE № {page_no}")
         try:
             data = response.json()["data"]
             list = data["list"]
@@ -29,19 +29,27 @@ def load_data(headers, nft_name):
                 break
 
             for item in list:
-                item_name = item["name"]
-
-                if item_name == nft_name:
+                if item["name"] in nft_names:
                     item_price = int(item["price"]) / 10**18
                     item_id = item["order_id"]
                     item_nft_id = item["token_id"]
-                    # print(item_name, item_price, item_nft_id, item_id)
-                    price_list.append(
-                        {
-                            "item_price": item_price,
-                            "url": f"https://www.treasureland.market/assets/0xdf7952b35f24acf7fc0487d01c8d5690a60dba07/{item_nft_id}/{item_id}?chain_id=56"
-                        }
-                    )
+                    # print(item["name"], item_price, item_nft_id, item_id)
+
+                    if result_dict.get(item["name"]):
+                        prices_list = result_dict[str(item["name"])]
+                        prices_list.append(
+                            {
+                                "item_price": item_price,
+                                "url": f"https://www.treasureland.market/assets/0xdf7952b35f24acf7fc0487d01c8d5690a60dba07/{item_nft_id}/{item_id}?chain_id=56"
+                            }
+                        )
+                    else:
+                        result_dict[item["name"]] = [
+                            {
+                                "item_price": item_price,
+                                "url": f"https://www.treasureland.market/assets/0xdf7952b35f24acf7fc0487d01c8d5690a60dba07/{item_nft_id}/{item_id}?chain_id=56"
+                            }
+                        ]
 
             page_no = page_no + 1
 
@@ -50,31 +58,28 @@ def load_data(headers, nft_name):
         
         
     
-    print(f"[#] NFT CALLED {nft_name} IS DOWNLOADED")
-    newlist = sorted(price_list, key=lambda k: k['item_price'])
-    pprint.pprint(newlist[:5])
-
-    result_list.append(
-        {
-            "nft_name": nft_name,
-            "prices": newlist,
-            "total_nfts": len(price_list)
-        }
-    )
-
-    return result_list
+    print(f"[#] NFTs ARE DOWNLOADED")
+    
+    return result_dict
 
 def main():
-    start_time = time.time()
+    count = 0
+    while True:
+        start_time = time.time()
 
-    for nft_name in nft_names:
-        load_data(headers, nft_name)
+        result = load_data()
 
-    
+        for key in result.keys():
+            new_list = sorted(result[key], key=lambda k:k['item_price'])
+            print(key)
+            pprint.pprint(new_list[:5])
 
-    finished_time = time.time() - start_time
+        finished_time = time.time() - start_time
 
-    print(f"Work has been done for {finished_time}")
+        print(f"Work has been done for {finished_time}")
+
+        count = count + 1
+        print(f"Total fetchings: {count}")
 
 if __name__ == "__main__":
     main()

@@ -10,11 +10,7 @@ def get_prices_from_json(dirname):
         f = open(f"./data/{dirname}/{date_dirname}/result_list.json")
         data = json.load(f)
 
-        if data[0].get("daily_min_price"):
-            prices_list.append(data[0]["daily_min_price"])
-        else:
-            prices_list.append(data[0]["prices"][0])
-            
+        prices_list.append(data[0]["prices"][:1])
 
     return prices_list
 
