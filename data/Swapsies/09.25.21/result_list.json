@@ -2,11 +2,13 @@
     {
         "nft_name": "Swapsies",
         "prices": [
+            99.0,
             105.0,
             198.0,
             199.0,
             3000.0
         ],
-        "total_nfts": 4
+        "daily_min_price": 99.0,
+        "total_nfts": 5
     }
 ]

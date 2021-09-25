@@ -2,9 +2,10 @@
     {
         "nft_name": "Easter '21 Champions",
         "prices": [
+            19.5,
             20.5,
             21.0,
-            22.0,
+            21.9,
             25.0,
             27.5,
             45.0,
@@ -24,6 +25,7 @@
             200.0,
             500.0
         ],
-        "total_nfts": 21
+        "daily_min_price": 19.5,
+        "total_nfts": 22
     }
 ]

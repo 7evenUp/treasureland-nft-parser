@@ -62,6 +62,7 @@ def load_data_into_folders(nfts_list):
         result_list = [{
             "nft_name": nft_name,
             "prices": nfts_list[nft_name],
+            "daily_min_price": nfts_list[nft_name][0],
             "total_nfts": len(nfts_list[nft_name])
         }]
 
@@ -69,6 +70,16 @@ def load_data_into_folders(nfts_list):
             os.mkdir(f"data/{nft_name}")
 
         if os.path.exists(f"data/{nft_name}/{date}"):
+            f = open(f"./data/{nft_name}/{date}/result_list.json")
+            data = json.load(f)
+
+            if nfts_list[nft_name][0] < data[0]["prices"][0]:
+                result_list[0]["daily_min_price"] = nfts_list[nft_name][0]
+            else:
+                result_list[0]["daily_min_price"] = data[0]["prices"][0]
+            
+            f.close()
+
             shutil.rmtree(f"data/{nft_name}/{date}")
             print("[#] Folder was deleted")
 
