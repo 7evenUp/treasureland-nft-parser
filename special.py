@@ -7,7 +7,8 @@ headers = {
     "accept": "application/json, text/plain, */*"
 }
 
-nft_names = { "Flipsie Easter ‘21" }
+nft_names = { "Flipsie Easter ‘21", "Stormy Easter ‘21" }
+# nft_names = { "Syrup Soak" }
 
 def load_data():
     page_no = 1
@@ -72,7 +73,7 @@ def main():
         for key in result.keys():
             new_list = sorted(result[key], key=lambda k:k['item_price'])
             print(key)
-            pprint.pprint(new_list[:5])
+            pprint.pprint(new_list[:3])
 
         finished_time = time.time() - start_time
 
