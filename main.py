@@ -8,7 +8,7 @@ nft_names = {
     "Baller", "Lucky", "Lottie", "Claire", "Syrup Soak",
     "Easter '21 Champions", "Cakeston Easter ‘21", "Flipsie Easter ‘21", "Stormy Easter ‘21", 
     "Bullish", "Hiccup", "Swapsies", "Drizzle",
-    "Blueberries", "Circular", "Sparkle"
+    "Blueberries", "Circular", "Sparkle", "Panurai"
 }
 
 def load_data():
