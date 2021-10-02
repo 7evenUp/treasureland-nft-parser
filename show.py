@@ -10,7 +10,10 @@ def get_prices_from_json(dirname):
         f = open(f"./data/{dirname}/{date_dirname}/result_list.json")
         data = json.load(f)
 
-        prices_list.append(data[0]["prices"][:1])
+        if data[0]["prices"]:
+            prices_list.append(data[0]["prices"][:1])
+        else:
+            prices_list.append(0)        
 
     return prices_list
 
